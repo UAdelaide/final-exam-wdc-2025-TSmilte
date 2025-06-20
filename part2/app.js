@@ -34,11 +34,13 @@ const pool = mysql.createPool({
 // Dogs List Route
 app.get('/api/dogs', async (req, res) => {
   try {
-    const [rows] = await pool.query(
-      `SELECT dog_id, name, size, owner_id FROM Dogs`
-    );
+    const [rows] = await pool.query(`
+      SELECT d.dog_id, d.name, d.size, u.username AS owner_username
+      FROM Dogs d
+      JOIN Users u ON d.owner_id = u.user_id
+    `);
 
-    // Fetch random image URLs in parallel for each dog
+    // Add random image for each dog
     const dogsWithPhotos = await Promise.all(
       rows.map(async (dog) => {
         try {
@@ -49,7 +51,6 @@ app.get('/api/dogs', async (req, res) => {
             photo: data.message
           };
         } catch {
-          // fallback image in case of error
           return {
             ...dog,
             photo: 'https://images.dog.ceo/breeds/terrier-norwich/n02094258_3184.jpg'
@@ -60,8 +61,7 @@ app.get('/api/dogs', async (req, res) => {
 
     res.json(dogsWithPhotos);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
+    res.status(500).json({ error: err.message });
   }
 });
 
