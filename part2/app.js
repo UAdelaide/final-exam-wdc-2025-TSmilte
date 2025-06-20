@@ -24,5 +24,12 @@ app.use('/api', authRoutes);
 app.use('/api/walks', walkRoutes);
 app.use('/api/users', userRoutes);
 
+const pool = mysql.createPool({
+  host: 'localhost',
+  user: 'root',       // your MySQL user
+  password: '',       // your MySQL password
+  database: 'DogWalkService'
+});
+
 // Export the app instead of listening here
 module.exports = app;
