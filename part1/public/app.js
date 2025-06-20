@@ -10,6 +10,10 @@ createApp({
         const newDog = reactive({ name: '', size: 'small' });
         const newRequest = reactive({ dog_id: '', requested_time: '', duration_minutes: '', location: '' });
 
+        // For applications management
+        const applications = ref([]);
+        const selectedRequestId = ref(null);
+
         // Signup
         const signup = async () => {
             await axios.post('/api/users/signup', form);
