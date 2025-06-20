@@ -44,6 +44,7 @@ createApp({
                 user.value = res.data.user;
                 page.value = 'dashboard';
                 loadWalkRequests();
+                loadUserDogs();
             } catch (err) {
                 alert('Login failed: ' + (err.response?.data?.error || err.message));
             }
