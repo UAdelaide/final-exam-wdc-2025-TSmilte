@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../models/db');
+const pool = require('../db');
 
 
 router.get('/owner/:owner_id', async (req, res) => {
