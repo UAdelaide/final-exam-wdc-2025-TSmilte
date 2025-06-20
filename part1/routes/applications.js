@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// Walker applies to a walk request
 router.post('/', async (req, res) => {
   const { request_id, walker_id } = req.body;
   try {
@@ -16,7 +15,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all applications for a specific walk request
 router.get('/request/:request_id', async (req, res) => {
   const { request_id } = req.params;
   const [apps] = await pool.query(
