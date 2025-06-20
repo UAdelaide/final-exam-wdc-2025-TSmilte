@@ -66,7 +66,6 @@ app.get('/api/dogs', async (req, res) => {
 
     // For each dog, assign a random image from Dog CEO API
     const dogsWithPhotos = rows.map(dog => {
-      // Dog CEO supports random images for all breeds
       // To avoid getting the same image for each dog per reload, add a random query string or use the random endpoint
       return {
         ...dog,
