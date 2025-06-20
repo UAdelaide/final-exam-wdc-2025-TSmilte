@@ -1,68 +1,114 @@
 const { createApp, ref, reactive } = Vue;
 
 createApp({
-    setup() {
-        // Minimal reactive state
-        const user = ref(null);
-        const page = ref('login');
-        const form = reactive({ username: '', email: '', password: '', role: 'owner' });
-        const walkRequests = ref([]);
-        const newDog = reactive({ name: '', size: 'small' });
-        const newRequest = reactive({ dog_id: '', requested_time: '', duration_minutes: '', location: '' });
+  setup() {
+    const user = ref(null);
+    const page = ref('login');
+    const form = reactive({ username: '', email: '', password: '', role: 'owner' });
+    const walkRequests = ref([]);
+    const newDog = reactive({ name: '', size: 'small' });
+    const newRequest = reactive({ dog_id: '', requested_time: '', duration_minutes: '', location: '' });
 
-        // Signup
-        const signup = async () => {
-            await axios.post('/api/users/signup', form);
-            page.value = 'login';
-        };
+    // --- NEW: For walker applications ---
+    const applications = ref([]);
+    const selectedRequestId = ref(null);
 
-        // Login
-        const login = async () => {
-            const res = await axios.post('/api/users/login', form);
-            user.value = res.data.user;
-            page.value = 'dashboard';
-            loadWalkRequests();
-        };
+    // Signup
+    const signup = async () => {
+      try {
+        await axios.post('/api/users/signup', form);
+        alert('Signup successful! Please log in.');
+        page.value = 'login';
+      } catch (err) {
+        alert('Signup failed: ' + (err.response?.data?.error || err.message));
+      }
+    };
 
-        const logout = () => {
-            user.value = null;
-            page.value = 'login';
-        };
+    // Login
+    const login = async () => {
+      try {
+        const res = await axios.post('/api/users/login', form);
+        user.value = res.data.user;
+        page.value = 'dashboard';
+        loadWalkRequests();
+      } catch (err) {
+        alert('Login failed: ' + (err.response?.data?.error || err.message));
+      }
+    };
 
+    // Logout
+    const logout = () => {
+      user.value = null;
+      page.value = 'login';
+      applications.value = [];
+      selectedRequestId.value = null;
+    };
 
-        // Load walk requests
-        const loadWalkRequests = async () => {
-            const res = await axios.get('/api/requests');
-            walkRequests.value = res.data;
-        };
+    // Load walk requests
+    const loadWalkRequests = async () => {
+      const res = await axios.get('/api/requests');
+      walkRequests.value = res.data;
+    };
 
-        // Add a dog
-        const addDog = async () => {
-            await axios.post('/api/dogs', { owner_id: user.value.user_id, ...newDog });
-            alert('Dog added!');
-        };
+    // Add a dog
+    const addDog = async () => {
+      try {
+        await axios.post('/api/dogs', { owner_id: user.value.user_id, ...newDog });
+        alert('Dog added!');
+      } catch (err) {
+        alert('Failed to add dog: ' + (err.response?.data?.error || err.message));
+      }
+    };
 
-        // Post a walk request (owner)
-        const postWalkRequest = async () => {
-            try {
-                await axios.post('/api/requests', { ...newRequest });
-                alert('Request posted!');
-                loadWalkRequests();
-            } catch (err) {
-                alert('Failed to post request: ' + err.response?.data?.error || err.message);
-            }
-        };
+    // Post a walk request (owner)
+    const postWalkRequest = async () => {
+      try {
+        await axios.post('/api/requests', { ...newRequest });
+        alert('Request posted!');
+        loadWalkRequests();
+      } catch (err) {
+        alert('Failed to post request: ' + (err.response?.data?.error || err.message));
+      }
+    };
 
+    // Apply to walk (walker)
+    const applyToWalk = async (request_id) => {
+      try {
+        await axios.post('/api/applications', { request_id, walker_id: user.value.user_id });
+        alert('Applied!');
+      } catch (err) {
+        alert('Failed to apply: ' + (err.response?.data?.error || err.message));
+      }
+    };
 
-        // Apply to walk (walker)
-        const applyToWalk = async (request_id) => {
-            await axios.post('/api/applications', { request_id, walker_id: user.value.user_id });
-            alert('Applied!');
-        };
+    // --- NEW: Owner loads applications for their walk request ---
+    const loadApplications = async (request_id) => {
+      selectedRequestId.value = request_id;
+      const res = await axios.get(`/api/applications/request/${request_id}`);
+      applications.value = res.data;
+    };
 
-        return { user, page, form, signup, login, walkRequests, loadWalkRequests, addDog, newDog, postWalkRequest, newRequest, applyToWalk, logout  };
-    },
-    template: `
+    // --- NEW: Owner accepts walker for a walk request ---
+    const acceptWalker = async (request_id, walker_id) => {
+      try {
+        await axios.post('/api/requests/accept', { request_id, walker_id });
+        alert('Walker accepted!');
+        applications.value = [];
+        selectedRequestId.value = null;
+        loadWalkRequests();
+      } catch (err) {
+        alert('Failed to accept walker: ' + (err.response?.data?.error || err.message));
+      }
+    };
+
+    return {
+      user, page, form, signup, login, walkRequests, loadWalkRequests,
+      addDog, newDog, postWalkRequest, newRequest, applyToWalk,
+      logout, // new
+      applications, selectedRequestId, loadApplications, acceptWalker // new
+    };
+  },
+  template: `
     <div v-if="page === 'login'">
       <h2>Login</h2>
       <input v-model="form.username" placeholder="Username"><br>
@@ -101,6 +147,24 @@ createApp({
         <input v-model="newRequest.duration_minutes" placeholder="Duration in minutes"><br>
         <input v-model="newRequest.location" placeholder="Location"><br>
         <button @click="postWalkRequest">Post Request</button>
+        <!-- NEW: List your own requests and load applications -->
+        <h3>Your Walk Requests</h3>
+        <ul>
+          <li v-for="req in walkRequests.filter(r => r.owner_id === user.user_id)" :key="req.request_id">
+            Dog: {{ req.dog_name }} | Time: {{ req.requested_time }} | Location: {{ req.location }}
+            <button @click="loadApplications(req.request_id)">View Applications</button>
+          </li>
+        </ul>
+        <!-- Applications for selected request -->
+        <div v-if="applications.length && selectedRequestId">
+          <h4>Applications for Request #{{ selectedRequestId }}</h4>
+          <ul>
+            <li v-for="app in applications" :key="app.application_id">
+              Walker: {{ app.username }} | Status: {{ app.status }}
+              <button v-if="app.status === 'pending'" @click="acceptWalker(selectedRequestId, app.walker_id)">Accept</button>
+            </li>
+          </ul>
+        </div>
       </div>
       <h3>Available Walk Requests</h3>
       <ul>
