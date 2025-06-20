@@ -123,6 +123,21 @@ createApp({
             }
         };
 
+        const submitRating = async () => {
+  try {
+    await axios.post('/api/ratings', { ...newRating, owner_id: user.value.user_id });
+    alert('Rating submitted!');
+    // Optionally clear form
+    newRating.request_id = '';
+    newRating.walker_id = '';
+    newRating.rating = 5;
+    newRating.comments = '';
+  } catch (err) {
+    alert('Failed to submit rating: ' + (err.response?.data?.error || err.message));
+  }
+};
+
+
         return {
             user, page, form, signup, login, walkRequests, loadWalkRequests,
             addDog, newDog, postWalkRequest, newRequest, applyToWalk,
