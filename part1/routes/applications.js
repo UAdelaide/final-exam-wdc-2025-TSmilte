@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// routes/applications.js
+// Get all applications for a specific walk request
 router.get('/request/:request_id', async (req, res) => {
   const { request_id } = req.params;
   const [apps] = await pool.query(
@@ -27,6 +27,5 @@ router.get('/request/:request_id', async (req, res) => {
   );
   res.json(apps);
 });
-
 
 module.exports = router;
