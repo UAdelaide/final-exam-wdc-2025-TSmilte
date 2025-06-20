@@ -31,6 +31,7 @@ router.get('/', async (req, res) => {
 router.post('/accept', async (req, res) => {
   const { request_id, walker_id } = req.body;
   try {
+    // Set accepted, set others to rejected
     await pool.query(
       'UPDATE WalkApplications SET status="accepted" WHERE request_id=? AND walker_id=?',
       [request_id, walker_id]
@@ -44,6 +45,20 @@ router.post('/accept', async (req, res) => {
       [request_id]
     );
     res.json({ message: 'Walker accepted for this walk.' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// (Optional) Deny a walker
+router.post('/deny', async (req, res) => {
+  const { request_id, walker_id } = req.body;
+  try {
+    await pool.query(
+      'UPDATE WalkApplications SET status="rejected" WHERE request_id=? AND walker_id=?',
+      [request_id, walker_id]
+    );
+    res.json({ message: 'Walker denied for this walk.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
