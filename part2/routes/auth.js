@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../models/db');
+const db = require('../db');
 const bcrypt = require('bcrypt');
 
 router.post('/login', async (req, res) => {
@@ -23,6 +23,7 @@ router.post('/login', async (req, res) => {
     return res.json({ success: false, message: 'Invalid password' });
   }
 
+  // Set session (using express-session)
   req.session.userId = user.user_id;
   req.session.role = user.role;
 
