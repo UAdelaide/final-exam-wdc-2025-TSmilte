@@ -1,13 +1,11 @@
-// part1/app.js
 const express = require('express');
 const mysql = require('mysql2/promise');
 const app = express();
 
-// DB setup (use same as in starthere)
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: '',      // or your MySQL root password
+  password: '', // or your MySQL root password
   database: 'DogWalkService'
 });
 
@@ -25,7 +23,6 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// --- /api/walkrequests/open ---
 app.get('/api/walkrequests/open', async (req, res) => {
   try {
     const [rows] = await pool.query(`
@@ -47,7 +44,6 @@ app.get('/api/walkrequests/open', async (req, res) => {
   }
 });
 
-// --- /api/walkers/summary ---
 app.get('/api/walkers/summary', async (req, res) => {
   try {
     const [walkers] = await pool.query(`
