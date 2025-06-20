@@ -35,24 +35,40 @@ router.get('/me', (req, res) => {
   res.json(req.session.user);
 });
 
-// POST login (dummy version)
+// Login route
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
   try {
-    const [rows] = await db.query(`
-      SELECT user_id, username, role FROM Users
-      WHERE email = ? AND password_hash = ?
-    `, [email, password]);
-
+    const [rows] = await db.query(
+      'SELECT * FROM Users WHERE username = ?',
+      [username]
+    );
     if (rows.length === 0) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.json({ success: false, message: 'Invalid username or password.' });
     }
-
-    res.json({ message: 'Login successful', user: rows[0] });
-  } catch (error) {
-    res.status(500).json({ error: 'Login failed' });
+    const user = rows[0];
+    if (user.password_hash !== password) {
+      return res.json({ success: false, message: 'Invalid username or password.' });
+    }
+    req.session.userId = user.user_id;
+    req.session.role = user.role;
+    return res.json({ success: true, role: user.role });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
   }
+});
+
+// Logout route
+router.post('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      return res.status(500).json({ success: false, message: "Logout failed" });
+    }
+    res.clearCookie('connect.sid');
+    res.json({ success: true });
+  });
 });
 
 module.exports = router;
