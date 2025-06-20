@@ -139,6 +139,16 @@ createApp({
       showRatingForm.value = true;
     };
 
+    const completeWalk = async (request_id) => {
+  try {
+    await axios.post('/api/requests/complete', { request_id });
+    alert('Walk marked as completed!');
+    loadWalkRequests();
+  } catch (err) {
+    alert('Failed to complete walk: ' + (err.response?.data?.error || err.message));
+  }
+};
+
     // Submit rating for the accepted walker
     const submitRating = async () => {
       try {
