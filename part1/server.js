@@ -12,6 +12,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+app.use(express.static('public'));
+
 app.use('/api/users', users);
 app.use('/api/dogs', dogs);
 app.use('/api/requests', requests);
