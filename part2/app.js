@@ -57,20 +57,32 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Dogs List Route
+const axios = require('axios');
+
 app.get('/api/dogs', async (req, res) => {
   try {
-    // Fetch all dogs without the photo column
     const [rows] = await pool.query(
       `SELECT dog_id, name, size, owner_id FROM Dogs`
     );
 
-    // For each dog, assign a random image from Dog CEO API
-    const dogsWithPhotos = rows.map(dog => {
-      return {
-        ...dog,
-        photo: `https://dog.ceo/api/breeds/image/random?dummy=${Math.random()}`
-      };
-    });
+    // Fetch random image URLs in parallel (for each dog)
+    const dogsWithPhotos = await Promise.all(
+      rows.map(async (dog) => {
+        try {
+          const response = await axios.get('https://dog.ceo/api/breeds/image/random');
+          return {
+            ...dog,
+            photo: response.data.message
+          };
+        } catch {
+          // fallback image in case of error
+          return {
+            ...dog,
+            photo: 'https://images.dog.ceo/breeds/terrier-norwich/n02094258_3184.jpg'
+          };
+        }
+      })
+    );
 
     res.json(dogsWithPhotos);
   } catch (err) {
@@ -78,6 +90,7 @@ app.get('/api/dogs', async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 // Export the app instead of listening here
 module.exports = app;
