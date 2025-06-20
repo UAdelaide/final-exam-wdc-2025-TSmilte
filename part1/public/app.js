@@ -81,31 +81,28 @@ createApp({
       }
     };
 
-    // --- NEW: Owner loads applications for their walk request ---
-    const loadApplications = async (request_id) => {
-      selectedRequestId.value = request_id;
-      const res = await axios.get(`/api/applications/request/${request_id}`);
-      applications.value = res.data;
+    // Accept a walker
+    const acceptWalker = async (request_id, walker_id) => {
+      await axios.post('/api/requests/accept', { request_id, walker_id });
+      alert('Walker accepted!');
+      applications.value = [];
+      selectedRequestId.value = null;
+      loadWalkRequests();
     };
 
-    // --- NEW: Owner accepts walker for a walk request ---
-    const acceptWalker = async (request_id, walker_id) => {
-      try {
-        await axios.post('/api/requests/accept', { request_id, walker_id });
-        alert('Walker accepted!');
-        applications.value = [];
-        selectedRequestId.value = null;
-        loadWalkRequests();
-      } catch (err) {
-        alert('Failed to accept walker: ' + (err.response?.data?.error || err.message));
-      }
+    // Deny a walker (optional)
+    const denyWalker = async (request_id, walker_id) => {
+      await axios.post('/api/requests/deny', { request_id, walker_id });
+      alert('Walker denied.');
+      // Refresh applications
+      loadApplications(request_id);
     };
 
     return {
       user, page, form, signup, login, walkRequests, loadWalkRequests,
       addDog, newDog, postWalkRequest, newRequest, applyToWalk,
-      logout, // new
-      applications, selectedRequestId, loadApplications, acceptWalker // new
+      logout,
+      applications, selectedRequestId, loadApplications, acceptWalker
     };
   },
   template: `
