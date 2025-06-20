@@ -90,6 +90,7 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
+app.use('/api', authRouter);
 
 
 // Export the app instead of listening here
