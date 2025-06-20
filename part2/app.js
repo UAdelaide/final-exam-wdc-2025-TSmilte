@@ -22,6 +22,7 @@ app.use(session({
 
 app.use('/api/walks', walkRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api', userRoutes);
 
 const pool = mysql.createPool({
   host: 'localhost',
