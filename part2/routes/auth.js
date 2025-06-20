@@ -16,12 +16,6 @@ router.post('/login', async (req, res) => {
     }
 
     const user = rows[0];
-
-    // If you use 'hashed...' as prefix in your DB, you can do:
-    // For plaintext password, match directly:
-    // const match = password === user.password_hash;
-
-    // If passwords in DB look like 'hashed123', you can do:
     const match = password === user.password_hash.replace('hashed', '');
 
     if (!match) {
