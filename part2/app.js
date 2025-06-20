@@ -4,6 +4,7 @@ require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 const app = express();
+const axios = require('axios');
 
 // Middleware
 app.use(express.json());
@@ -57,8 +58,6 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Dogs List Route
-const axios = require('axios');
-
 app.get('/api/dogs', async (req, res) => {
   try {
     const [rows] = await pool.query(
