@@ -99,8 +99,12 @@
         }
         async function loadMyDogs() {
           try {
-            const res = await fetch('/api/my-dogs', { credentials: "include" });
-            myDogs.value = await res.json();
+            const userRes = await fetch('/api/users/me', { credentials: "include" });
+            if (!userRes.ok) return;
+            const user = await userRes.json();
+
+            const dogsRes = await fetch(`/api/owner/${user.user_id}`);
+            myDogs.value = await dogsRes.json();
           } catch (err) {
             myDogs.value = [];
           }
