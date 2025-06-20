@@ -281,7 +281,7 @@ createApp({
       </div>
       <h3>Available Walk Requests</h3>
       <ul>
-        <li v-for="req in walkRequests" :key="req.request_id">
+        <li v-for="req in walkRequests.filter(r => r.status === 'open')" :key="req.request_id">
           Dog: {{ req.dog_name }} ({{ req.size }}) | Time: {{ req.requested_time }} | Location: {{ req.location }}
           <span v-if="user.role === 'walker'">
             <button @click="applyToWalk(req.request_id)">Apply</button>
