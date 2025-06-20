@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
+// Add a rating (by owner after walk)
 router.post('/', async (req, res) => {
   const { request_id, walker_id, owner_id, rating, comments } = req.body;
   try {
@@ -16,6 +17,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Get ratings for a walker
 router.get('/walker/:walker_id', async (req, res) => {
   const { walker_id } = req.params;
   const [ratings] = await pool.query(
