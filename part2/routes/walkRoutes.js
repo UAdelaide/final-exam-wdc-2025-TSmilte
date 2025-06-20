@@ -54,6 +54,10 @@ router.post('/:id/apply', async (req, res) => {
 
     res.status(201).json({ message: 'Application submitted' });
   } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      // Duplicate application
+      return res.status(409).json({ error: 'You have already applied for this walk.' });
+    }
     console.error('SQL Error:', error);
     res.status(500).json({ error: 'Failed to apply for walk' });
   }
