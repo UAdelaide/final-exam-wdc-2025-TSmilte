@@ -213,14 +213,14 @@ createApp({
         </li>
       </ul>
       <div v-if="user.role === 'owner'">
-      <!-- Other owner features ... -->
-      <h3>Rate Completed Walk</h3>
-      <input v-model="newRating.request_id" placeholder="Walk Request ID"><br>
-      <input v-model="newRating.walker_id" placeholder="Walker ID"><br>
-      <input v-model.number="newRating.rating" type="number" min="1" max="5" placeholder="Rating (1-5)"><br>
-      <textarea v-model="newRating.comments" placeholder="Comments"></textarea><br>
-      <button @click="submitRating">Submit Rating</button>
-    </div>
+  <!-- Other owner features ... -->
+  <h3>Rate Completed Walk</h3>
+  <input v-model="newRating.request_id" placeholder="Walk Request ID"><br>
+  <input v-model="newRating.walker_id" placeholder="Walker ID"><br>
+  <input v-model.number="newRating.rating" type="number" min="1" max="5" placeholder="Rating (1-5)"><br>
+  <textarea v-model="newRating.comments" placeholder="Comments"></textarea><br>
+  <button @click="submitRating">Submit Rating</button>
+</div>
 
     </div>
   `
