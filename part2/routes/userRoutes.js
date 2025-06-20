@@ -29,10 +29,10 @@ router.post('/register', async (req, res) => {
 });
 
 router.get('/me', (req, res) => {
-  if (!req.session.user) {
+  if (!req.session.userId) {
     return res.status(401).json({ error: 'Not logged in' });
   }
-  res.json(req.session.user);
+  res.json({ user_id: req.session.userId, role: req.session.role });
 });
 
 // Login route
