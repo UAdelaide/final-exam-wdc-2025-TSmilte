@@ -239,9 +239,9 @@ createApp({
         <h3>Your Walk Requests</h3>
         <ul>
           <li v-for="req in walkRequests.filter(r =>
-  r.owner_id === user.user_id &&
-  (!r.rated && (r.status === 'open' || r.status === 'accepted' || r.status === 'completed'))
-)" :key="req.request_id">
+              r.owner_id === user.user_id &&
+              (!r.rated && (r.status === 'open' || r.status === 'accepted' || r.status === 'completed'))
+            )" :key="req.request_id">
             Dog: {{ req.dog_name }} | Time: {{ req.requested_time }} | Location: {{ req.location }}
             <button @click="loadApplications(req.request_id)">View Applications</button>
           </li>
