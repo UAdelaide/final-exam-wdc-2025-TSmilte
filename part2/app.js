@@ -59,18 +59,22 @@ app.post('/api/login', async (req, res) => {
 // Dogs List Route
 app.get('/api/dogs', async (req, res) => {
   try {
+    // Fetch all dogs without the photo column
     const [rows] = await pool.query(
-      `SELECT d.dog_id, d.name, d.size, d.owner_id,
-      CASE d.dog_id
-        WHEN 1 THEN 'https://images.dog.ceo/breeds/bulldog-boston/n02096585_11347.jpg'
-        WHEN 2 THEN 'https://images.dog.ceo/breeds/chihuahua/n02085620_1200.jpg'
-        WHEN 3 THEN 'https://images.dog.ceo/breeds/germanshepherd/n02106662_3787.jpg'
-        WHEN 4 THEN 'https://images.dog.ceo/breeds/terrier-lakeland/n02095570_2461.jpg'
-        ELSE 'https://images.dog.ceo/breeds/terrier-norwich/n02094258_3184.jpg'
-      END AS photo
-      FROM Dogs d`
+      `SELECT dog_id, name, size, owner_id FROM Dogs`
     );
-    res.json(rows);
+
+    // For each dog, assign a random image from Dog CEO API
+    const dogsWithPhotos = rows.map(dog => {
+      // Dog CEO supports random images for all breeds
+      // To avoid getting the same image for each dog per reload, add a random query string or use the random endpoint
+      return {
+        ...dog,
+        photo: `https://dog.ceo/api/breeds/image/random?dummy=${Math.random()}`
+      };
+    });
+
+    res.json(dogsWithPhotos);
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Server error' });
