@@ -120,7 +120,7 @@ createApp({
             user, page, form, signup, login, walkRequests, loadWalkRequests,
             addDog, newDog, postWalkRequest, newRequest, applyToWalk,
             logout, applications, selectedRequestId, loadApplications,
-            acceptWalker, denyWalker // make sure these are returned!
+            acceptWalker, denyWalker
         };
     },
     template: `
