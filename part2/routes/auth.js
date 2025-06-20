@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Logout route
-app.post('/api/logout', (req, res) => {
+app.post('/logout', (req, res) => {
   req.session.destroy(err => {
     if (err) {
       return res.status(500).json({ success: false, message: "Logout failed" });
