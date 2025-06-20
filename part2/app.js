@@ -43,7 +43,6 @@ app.post('/api/login', async (req, res) => {
       return res.json({ success: false, message: 'Invalid username or password.' });
     }
     const user = rows[0];
-    // For demo: just match password directly. In production, hash/compare!
     if (user.password_hash !== password) {
       return res.json({ success: false, message: 'Invalid username or password.' });
     }
