@@ -78,8 +78,5 @@ app.get('/api/dogs', async (req, res) => {
   }
 });
 
-// Static hosting (if needed)
-app.use(express.static('public'));
-
 // Export the app instead of listening here
 module.exports = app;
