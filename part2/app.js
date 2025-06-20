@@ -31,5 +31,55 @@ const pool = mysql.createPool({
   database: 'DogWalkService'
 });
 
+// Login Route
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const [rows] = await pool.query(
+      'SELECT * FROM Users WHERE username = ?', [username]
+    );
+    if (rows.length === 0) {
+      return res.json({ success: false, message: 'Invalid username or password.' });
+    }
+    const user = rows[0];
+    // For demo: just match password directly. In production, hash/compare!
+    if (user.password_hash !== password) {
+      return res.json({ success: false, message: 'Invalid username or password.' });
+    }
+    // Save session
+    req.session.userId = user.user_id;
+    req.session.role = user.role;
+    return res.json({ success: true, role: user.role });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Dogs List Route
+app.get('/api/dogs', async (req, res) => {
+  try {
+    // For demo, we hardcode photo URLs here
+    const [rows] = await pool.query(
+      `SELECT d.dog_id, d.name, d.size, d.owner_id,
+      CASE d.dog_id
+        WHEN 1 THEN 'https://images.dog.ceo/breeds/bulldog-boston/n02096585_11347.jpg'
+        WHEN 2 THEN 'https://images.dog.ceo/breeds/chihuahua/n02085620_1200.jpg'
+        WHEN 3 THEN 'https://images.dog.ceo/breeds/germanshepherd/n02106662_3787.jpg'
+        WHEN 4 THEN 'https://images.dog.ceo/breeds/terrier-lakeland/n02095570_2461.jpg'
+        ELSE 'https://images.dog.ceo/breeds/terrier-norwich/n02094258_3184.jpg'
+      END AS photo
+      FROM Dogs d`
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Static hosting (if needed)
+app.use(express.static('public'));
+
 // Export the app instead of listening here
 module.exports = app;
