@@ -43,7 +43,6 @@ router.get('/', async (req, res) => {
 router.post('/accept', async (req, res) => {
   const { request_id, walker_id } = req.body;
   try {
-    // Set accepted, set others to rejected
     await pool.query(
       'UPDATE WalkApplications SET status="accepted" WHERE request_id=? AND walker_id=?',
       [request_id, walker_id]
