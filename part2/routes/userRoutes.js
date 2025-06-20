@@ -72,11 +72,10 @@ router.post('/logout', (req, res) => {
 });
 
 // Get all dogs owned by the currently logged-in owner
-router.get('/my-dogs', async (req, res) => {
-  const ownerId = req.session.userId;
-  if (!ownerId) return res.status(401).json({ error: 'Not logged in' });
-  const [rows] = await db.query('SELECT dog_id, name FROM Dogs WHERE owner_id = ?', [ownerId]);
-  res.json(rows);
+router.get('/owner/:owner_id', async (req, res) => {
+  const { owner_id } = req.params;
+  const [dogs] = await pool.query('SELECT * FROM Dogs WHERE owner_id = ?', [owner_id]);
+  res.json(dogs);
 });
 
 
