@@ -12,6 +12,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// Serve static files from public (for frontend)
 app.use(express.static('public'));
 
 app.use('/api/users', users);
@@ -20,5 +21,8 @@ app.use('/api/requests', requests);
 app.use('/api/applications', applications);
 app.use('/api/ratings', ratings);
 
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
 
 app.listen(3000, () => console.log('Server running on port 3000'));
