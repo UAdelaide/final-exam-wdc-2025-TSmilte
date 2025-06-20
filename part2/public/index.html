@@ -25,8 +25,6 @@
         <div v-if="error" style="color: red">{{ error }}</div>
       </form>
     </div>
-
-    <h1 class="mb-4 text-primary">{{ message }}</h1>
     <p class="lead">Connect with trusted walkers for your beloved dog!</p>
 
     <a href="owner-dashboard.html" class="btn btn-outline-primary me-2">Owner Dashboard</a>
@@ -34,7 +32,8 @@
   </div>
 
   <script>
-    export default {
+    const { createApp } = Vue;
+    createApp({
       data() {
         return {
           username: "",
@@ -44,7 +43,6 @@
       },
       methods: {
         async login() {
-          // Call backend API to log in
           try {
             const res = await fetch("/api/login", {
               method: "POST",
@@ -55,9 +53,9 @@
             if (data.success) {
               // Redirect based on role
               if (data.role === "owner") {
-                window.location.href = "/owner-dashboard";
+                window.location.href = "owner-dashboard.html";
               } else if (data.role === "walker") {
-                window.location.href = "/walker-dashboard";
+                window.location.href = "walker-dashboard.html";
               }
             } else {
               this.error = data.message || "Login failed";
@@ -66,14 +64,6 @@
             this.error = "Server error";
           }
         }
-      }
-    };
-    const { createApp } = Vue;
-    createApp({
-      data() {
-        return {
-          message: 'Welcome to the Dog Walking Service!'
-        };
       }
     }).mount('#app');
   </script>
