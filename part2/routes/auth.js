@@ -23,7 +23,6 @@ router.post('/login', async (req, res) => {
     return res.json({ success: false, message: 'Invalid password' });
   }
 
-  // Set session (using express-session)
   req.session.userId = user.user_id;
   req.session.role = user.role;
 
