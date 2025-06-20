@@ -26,21 +26,21 @@ router.post('/complete', async (req, res) => {
 router.get('/', async (req, res) => {
   const [requests] = await pool.query(
     `SELECT wr.*,
-            d.owner_id,
-            d.name as dog_name,
-            d.size,
-            wa.walker_id AS accepted_walker_id,
-            u.username AS accepted_walker_name,
-            CASE WHEN r.rating_id IS NULL THEN 0 ELSE 1 END AS rated
-     FROM WalkRequests wr
-     JOIN Dogs d ON wr.dog_id = d.dog_id
-     LEFT JOIN WalkApplications wa
-       ON wr.request_id = wa.request_id AND wa.status = 'accepted'
-     LEFT JOIN Users u
-       ON wa.walker_id = u.user_id
-     LEFT JOIN WalkRatings r
-       ON wr.request_id = r.request_id
-     WHERE wr.status = 'open' OR wr.status = 'accepted'`
+          d.owner_id,
+          d.name as dog_name,
+          d.size,
+          wa.walker_id AS accepted_walker_id,
+          u.username AS accepted_walker_name,
+          CASE WHEN r.rating_id IS NULL THEN 0 ELSE 1 END AS rated
+   FROM WalkRequests wr
+   JOIN Dogs d ON wr.dog_id = d.dog_id
+   LEFT JOIN WalkApplications wa
+     ON wr.request_id = wa.request_id AND wa.status = 'accepted'
+   LEFT JOIN Users u
+     ON wa.walker_id = u.user_id
+   LEFT JOIN WalkRatings r
+     ON wr.request_id = r.request_id
+   WHERE wr.status IN ('open', 'accepted', 'completed')`
   );
   res.json(requests);
 });
