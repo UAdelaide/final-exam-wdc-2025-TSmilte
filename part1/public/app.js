@@ -236,11 +236,12 @@ createApp({
             </li>
           </ul>
         </div>
-        <h3>Accepted Walks - Rate Your Walker</h3>
+        <h3>Accepted Walks - Complete & Rate</h3>
         <ul>
-          <li v-for="req in walkRequests.filter(r => r.owner_id === user.user_id && r.status === 'accepted' && r.accepted_walker_id && !r.rated)" :key="'accepted-' + req.request_id">
+          <li v-for="req in walkRequests.filter(r => r.owner_id === user.user_id && r.status === 'accepted' && r.accepted_walker_id)" :key="'accepted-' + req.request_id">
             Dog: {{ req.dog_name }} | Time: {{ req.requested_time }} | Walker: {{ req.accepted_walker_name || req.accepted_walker_id }}
-            <button @click="openRatingForm(req)">Rate</button>
+            <button @click="completeWalk(req.request_id)">Complete Walk</button>
+            <button @click="openRatingForm(req)" v-if="req.status === 'completed'">Rate</button>
           </li>
         </ul>
         <div v-if="showRatingForm">
