@@ -49,6 +49,14 @@
         const error = ref('');
         const walkerId = ref(null);
 
+        async function getCurrentUser() {
+          const res = await fetch('/api/users/me', { credentials: "include" });
+          if (res.ok) {
+            const user = await res.json();
+            walkerId.value = user.user_id;
+          }
+        }
+
         async function loadWalkRequests() {
           try {
             const res = await fetch('/api/walks');
@@ -60,13 +68,7 @@
         }
 
 
-        async function getWalkerId() {
-          const res = await fetch('/api/users/me', { credentials: "include" });
-          if (res.ok) {
-            const user = await res.json();
-            walkerId.value = user.user_id;
-          }
-        }
+
         async function applyToWalk(requestId) {
           try {
             const res = await fetch(`/api/walks/${requestId}/apply`, {
