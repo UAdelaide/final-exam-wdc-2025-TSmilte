@@ -64,7 +64,6 @@ app.get('/api/dogs', async (req, res) => {
       `SELECT dog_id, name, size, owner_id FROM Dogs`
     );
 
-    // Fetch random image URLs in parallel (for each dog)
     const dogsWithPhotos = await Promise.all(
       rows.map(async (dog) => {
         try {
@@ -74,7 +73,6 @@ app.get('/api/dogs', async (req, res) => {
             photo: response.data.message
           };
         } catch {
-          // fallback image in case of error
           return {
             ...dog,
             photo: 'https://images.dog.ceo/breeds/terrier-norwich/n02094258_3184.jpg'
