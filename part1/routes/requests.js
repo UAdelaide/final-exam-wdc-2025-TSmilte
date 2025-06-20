@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
+// Create a new walk request (by owner)
 router.post('/', async (req, res) => {
   const { dog_id, requested_time, duration_minutes, location } = req.body;
   try {
@@ -15,6 +16,7 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Get all open walk requests (for walkers)
 router.get('/', async (req, res) => {
   const [requests] = await pool.query(
     `SELECT wr.*, d.name as dog_name, d.size
@@ -25,6 +27,7 @@ router.get('/', async (req, res) => {
   res.json(requests);
 });
 
+// Accept a walker for a walk request (by owner)
 router.post('/accept', async (req, res) => {
   const { request_id, walker_id } = req.body;
   try {
