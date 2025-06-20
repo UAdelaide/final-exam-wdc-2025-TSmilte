@@ -229,7 +229,10 @@ createApp({
             {{ dog.name }} ({{ dog.size }})
           </option>
         </select>
-        <input v-model="newRequest.requested_time" placeholder="YYYY-MM-DD HH:MM"><br>
+        <input
+            v-model="newRequest.requested_time"
+            type="datetime-local"
+            placeholder="Date and time"><br>
         <input v-model="newRequest.duration_minutes" placeholder="Duration in minutes"><br>
         <input v-model="newRequest.location" placeholder="Location"><br>
         <button @click="postWalkRequest">Post Request</button>
