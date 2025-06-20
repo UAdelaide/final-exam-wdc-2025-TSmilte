@@ -24,6 +24,12 @@ createApp({
             loadWalkRequests();
         };
 
+        const logout = () => {
+            user.value = null;
+            page.value = 'login';
+        };
+
+
         // Load walk requests
         const loadWalkRequests = async () => {
             const res = await axios.get('/api/requests');
