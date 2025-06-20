@@ -71,6 +71,11 @@
 
         async function applyToWalk(requestId) {
           try {
+            if (!walkerId.value) {
+              await getCurrentUser(); // fetch the walker id if not yet loaded
+              if (!walkerId.value) throw new Error('Not logged in');
+            }
+
             const res = await fetch(`/api/walks/${requestId}/apply`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
