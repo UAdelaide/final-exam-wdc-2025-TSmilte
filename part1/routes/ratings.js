@@ -6,11 +6,19 @@ const pool = require('../db');
 router.post('/', async (req, res) => {
   const { request_id, walker_id, owner_id, rating, comments } = req.body;
   try {
+
+    const [walks] = await pool.query(
+      "SELECT status FROM WalkRequests WHERE request_id = ?",
+      [request_id]
+    );
+    if (!walks.length || walks[0].status !== 'completed') {
+      return res.status(400).json({ error: "You can only rate a completed walk." });
+    }
+
     await pool.query(
       'INSERT INTO WalkRatings (request_id, walker_id, owner_id, rating, comments) VALUES (?, ?, ?, ?, ?)',
       [request_id, walker_id, owner_id, rating, comments]
     );
-    await pool.query('UPDATE WalkRequests SET status="completed" WHERE request_id=?', [request_id]);
     res.status(201).json({ message: 'Rating added.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
