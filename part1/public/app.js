@@ -60,7 +60,7 @@ createApp({
             alert('Applied!');
         };
 
-        return { user, page, form, signup, login, walkRequests, loadWalkRequests, addDog, newDog, postWalkRequest, newRequest, applyToWalk };
+        return { user, page, form, signup, login, walkRequests, loadWalkRequests, addDog, newDog, postWalkRequest, newRequest, applyToWalk, logout  };
     },
     template: `
     <div v-if="page === 'login'">
