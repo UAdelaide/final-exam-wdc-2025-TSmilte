@@ -2,14 +2,14 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// Get all dogs for a specific owner
+
 router.get('/owner/:owner_id', async (req, res) => {
   const { owner_id } = req.params;
   const [dogs] = await pool.query('SELECT * FROM Dogs WHERE owner_id = ?', [owner_id]);
   res.json(dogs);
 });
 
-// Create a new dog profile
+
 router.post('/', async (req, res) => {
   const { owner_id, name, size } = req.body;
   try {
