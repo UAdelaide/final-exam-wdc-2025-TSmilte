@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
 // Get all open walk requests (for walkers)
 router.get('/', async (req, res) => {
   const [requests] = await pool.query(
-    `SELECT wr.*, d.owner_id, d.name as dog_name, d.size
+   `SELECT wr.*, d.owner_id, d.name as dog_name, d.size
     FROM WalkRequests wr
     JOIN Dogs d ON wr.dog_id = d.dog_id
     WHERE wr.status = 'open'`
