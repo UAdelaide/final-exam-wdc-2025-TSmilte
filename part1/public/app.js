@@ -84,6 +84,7 @@ createApp({
     </div>
     <div v-else-if="page === 'dashboard'">
       <h2>Welcome, {{ user.username }}</h2>
+      <button @click="logout">Logout</button>
       <button @click="loadWalkRequests">Reload Walk Requests</button>
       <div v-if="user.role === 'owner'">
         <h3>Add Dog</h3>
