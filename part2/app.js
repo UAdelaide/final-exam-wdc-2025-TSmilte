@@ -59,7 +59,6 @@ app.post('/api/login', async (req, res) => {
 // Dogs List Route
 app.get('/api/dogs', async (req, res) => {
   try {
-    // For demo, we hardcode photo URLs here
     const [rows] = await pool.query(
       `SELECT d.dog_id, d.name, d.size, d.owner_id,
       CASE d.dog_id
