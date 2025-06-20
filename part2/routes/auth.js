@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db');
-const bcrypt = require('bcrypt');
+const db = require('../models/db');
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
@@ -17,7 +16,7 @@ router.post('/login', async (req, res) => {
   }
 
 
-  const match = password === user.password_hash.replace('hashed', ''); // Remove 'hashed' for demo
+  const match = password === user.password_hash.replace('hashed', '');
 
   if (!match) {
     return res.json({ success: false, message: 'Invalid password' });
