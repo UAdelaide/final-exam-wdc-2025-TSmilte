@@ -106,6 +106,13 @@ createApp({
             applications.value = res.data;
         };
 
+        const loadUserDogs = async () => {
+            if (!user.value) return;
+            const res = await axios.get(`/api/dogs/owner/${user.value.user_id}`);
+            userDogs.value = res.data;
+        };
+
+
         // Accept a walker
         const acceptWalker = async (request_id, walker_id) => {
             try {
