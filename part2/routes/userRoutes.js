@@ -74,7 +74,7 @@ router.post('/logout', (req, res) => {
 // Get all dogs owned by the currently logged-in owner
 router.get('/owner/:owner_id', async (req, res) => {
   const { owner_id } = req.params;
-  const [dogs] = await pool.query('SELECT * FROM Dogs WHERE owner_id = ?', [owner_id]);
+  const [dogs] = await db.query('SELECT * FROM Dogs WHERE owner_id = ?', [owner_id]);
   res.json(dogs);
 });
 
