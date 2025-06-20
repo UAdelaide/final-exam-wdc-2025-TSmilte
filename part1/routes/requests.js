@@ -16,6 +16,12 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/complete', async (req, res) => {
+  const { request_id } = req.body;
+  await pool.query('UPDATE WalkRequests SET status="completed" WHERE request_id=?', [request_id]);
+  res.json({ message: 'Walk marked as completed.' });
+});
+
 // Get all open walk requests (for walkers)
 router.get('/', async (req, res) => {
   const [requests] = await pool.query(
