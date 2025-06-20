@@ -59,9 +59,27 @@ createApp({
             await axios.post('/api/applications', { request_id, walker_id: user.value.user_id });
             alert('Applied!');
         };
+        // Accept a walker
+        const acceptWalker = async (request_id, walker_id) => {
+            await axios.post('/api/requests/accept', { request_id, walker_id });
+            alert('Walker accepted!');
+            applications.value = [];
+            selectedRequestId.value = null;
+            loadWalkRequests();
+        };
 
-        return { user, page, form, signup, login, walkRequests, loadWalkRequests, addDog, newDog, postWalkRequest, newRequest, applyToWalk, logout,
-      acceptWalker, denyWalker  };
+        // Deny a walker (optional)
+        const denyWalker = async (request_id, walker_id) => {
+            await axios.post('/api/requests/deny', { request_id, walker_id });
+            alert('Walker denied.');
+            // Refresh applications
+            loadApplications(request_id);
+        };
+
+        return {
+            user, page, form, signup, login, walkRequests, loadWalkRequests, addDog, newDog, postWalkRequest, newRequest, applyToWalk, logout,
+            acceptWalker, denyWalker
+        };
     },
     template: `
     <div v-if="page === 'login'">
