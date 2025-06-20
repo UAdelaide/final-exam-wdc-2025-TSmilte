@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// Add a rating (by owner after walk)
 router.post('/', async (req, res) => {
   const { request_id, walker_id, owner_id, rating, comments } = req.body;
   try {
@@ -10,7 +9,6 @@ router.post('/', async (req, res) => {
       'INSERT INTO WalkRatings (request_id, walker_id, owner_id, rating, comments) VALUES (?, ?, ?, ?, ?)',
       [request_id, walker_id, owner_id, rating, comments]
     );
-    // Optionally mark request as completed
     await pool.query('UPDATE WalkRequests SET status="completed" WHERE request_id=?', [request_id]);
     res.status(201).json({ message: 'Rating added.' });
   } catch (err) {
