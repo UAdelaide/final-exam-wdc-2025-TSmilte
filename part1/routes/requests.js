@@ -34,11 +34,10 @@ router.get('/', async (req, res) => {
        ON wa.walker_id = u.user_id
      LEFT JOIN WalkRatings r
        ON wr.request_id = r.request_id
-     WHERE wr.status = 'open' OR wr.status = 'accepted'`
+     WHERE wr.status = 'open'`
   );
   res.json(requests);
 });
-
 
 // Accept a walker for a walk request (by owner)
 router.post('/accept', async (req, res) => {
