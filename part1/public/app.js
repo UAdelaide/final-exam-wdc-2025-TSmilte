@@ -223,7 +223,12 @@ createApp({
         </select><br>
         <button @click="addDog">Add Dog</button>
         <h3>Post Walk Request</h3>
-        <input v-model="newRequest.dog_id" placeholder="Dog ID"><br>
+        <select v-model="newRequest.dog_id">
+          <option disabled value="">Select your dog</option>
+          <option v-for="dog in userDogs" :value="dog.dog_id" :key="dog.dog_id">
+            {{ dog.name }} ({{ dog.size }})
+          </option>
+        </select>
         <input v-model="newRequest.requested_time" placeholder="YYYY-MM-DD HH:MM"><br>
         <input v-model="newRequest.duration_minutes" placeholder="Duration in minutes"><br>
         <input v-model="newRequest.location" placeholder="Location"><br>
