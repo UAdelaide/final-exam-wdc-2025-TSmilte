@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const pool = require('../db');
+const pool = require('../models/db');
 
 router.post('/', async (req, res) => {
   const { request_id, walker_id, owner_id, rating, comments } = req.body;
