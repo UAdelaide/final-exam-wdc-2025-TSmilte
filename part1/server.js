@@ -18,8 +18,5 @@ app.use('/api/requests', requests);
 app.use('/api/applications', applications);
 app.use('/api/ratings', ratings);
 
-app.get('/', (req, res) => {
-  res.send('Dog Walking API is running!');
-});
 
 app.listen(3000, () => console.log('Server running on port 3000'));
