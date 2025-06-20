@@ -8,6 +8,13 @@ createApp({
         const walkRequests = ref([]);
         const newDog = reactive({ name: '', size: 'small' });
         const newRequest = reactive({ dog_id: '', requested_time: '', duration_minutes: '', location: '' });
+        const newRating = reactive({
+            request_id: '',
+            walker_id: '',
+            owner_id: '',
+            rating: 5,
+            comments: ''
+        });
 
         // For applications management
         const applications = ref([]);
