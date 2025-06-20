@@ -32,30 +32,6 @@ const pool = mysql.createPool({
   database: 'DogWalkService'
 });
 
-// Login Route
-app.post('/api/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const [rows] = await pool.query(
-      'SELECT * FROM Users WHERE username = ?', [username]
-    );
-    if (rows.length === 0) {
-      return res.json({ success: false, message: 'Invalid username or password.' });
-    }
-    const user = rows[0];
-    if (user.password_hash !== password) {
-      return res.json({ success: false, message: 'Invalid username or password.' });
-    }
-    // Save session
-    req.session.userId = user.user_id;
-    req.session.role = user.role;
-    return res.json({ success: true, role: user.role });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, message: 'Server error' });
-  }
-});
-
 // Dogs List Route
 app.get('/api/dogs', async (req, res) => {
   try {
