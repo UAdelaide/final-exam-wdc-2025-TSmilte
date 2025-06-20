@@ -38,7 +38,7 @@ app.post('/api/logout', (req, res) => {
     if (err) {
       return res.status(500).json({ success: false, message: "Logout failed" });
     }
-    res.clearCookie('connect.sid'); // optional, for default session cookie name
+    res.clearCookie('connect.sid');
     res.json({ success: true });
   });
 });
