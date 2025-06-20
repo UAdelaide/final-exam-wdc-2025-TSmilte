@@ -64,15 +64,18 @@ app.get('/api/dogs', async (req, res) => {
       `SELECT dog_id, name, size, owner_id FROM Dogs`
     );
 
+    // Fetch random image URLs in parallel for each dog
     const dogsWithPhotos = await Promise.all(
       rows.map(async (dog) => {
         try {
-          const response = await axios.get('https://dog.ceo/api/breeds/image/random');
+          const response = await fetch('https://dog.ceo/api/breeds/image/random');
+          const data = await response.json();
           return {
             ...dog,
-            photo: response.data.message
+            photo: data.message
           };
         } catch {
+          // fallback image in case of error
           return {
             ...dog,
             photo: 'https://images.dog.ceo/breeds/terrier-norwich/n02094258_3184.jpg'
@@ -87,6 +90,7 @@ app.get('/api/dogs', async (req, res) => {
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 
 // Export the app instead of listening here
