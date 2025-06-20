@@ -121,6 +121,24 @@ createApp({
         <input v-model="newRequest.location" placeholder="Location"><br>
         <button @click="postWalkRequest">Post Request</button>
       </div>
+      <h3>Your Walk Requests</h3>
+        <ul>
+          <li v-for="req in walkRequests.filter(r => r.owner_id === user.user_id)" :key="req.request_id">
+            Dog: {{ req.dog_name }} | Time: {{ req.requested_time }} | Location: {{ req.location }}
+            <button @click="loadApplications(req.request_id)">View Applications</button>
+          </li>
+        </ul>
+        <div v-if="applications.length && selectedRequestId">
+          <h4>Applications for Request #{{ selectedRequestId }}</h4>
+          <ul>
+            <li v-for="app in applications" :key="app.application_id">
+              Walker: {{ app.username }} | Status: {{ app.status }}
+              <button v-if="app.status === 'pending'" @click="acceptWalker(selectedRequestId, app.walker_id)">Accept</button>
+              <button v-if="app.status === 'pending'" @click="denyWalker(selectedRequestId, app.walker_id)">Deny</button>
+            </li>
+          </ul>
+        </div>
+      </div>
       <h3>Available Walk Requests</h3>
       <ul>
         <li v-for="req in walkRequests" :key="req.request_id">
