@@ -14,7 +14,11 @@ const userRoutes = require('./routes/userRoutes');
 const session = require('express-session');
 const authRoutes = require('./routes/auth');
 
-app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: true }));
+app.use(session({
+  secret: 'dogsecret',
+  resave: false,
+  saveUninitialized: false,
+}));
 app.use('/api', authRoutes);
 
 app.use('/api/walks', walkRoutes);
