@@ -142,7 +142,7 @@ createApp({
             user, page, form, signup, login, walkRequests, loadWalkRequests,
             addDog, newDog, postWalkRequest, newRequest, applyToWalk,
             logout, applications, selectedRequestId, loadApplications,
-            acceptWalker, denyWalker, newRating,
+            acceptWalker, denyWalker, newRating, submitRating
         };
     },
     template: `
