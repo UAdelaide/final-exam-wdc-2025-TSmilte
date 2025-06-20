@@ -81,6 +81,5 @@ app.get('/api/walkers/summary', async (req, res) => {
   }
 });
 
-// --- Start server (see starthere/app.js for pattern) ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
