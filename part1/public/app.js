@@ -186,7 +186,7 @@ createApp({
             addDog, newDog, postWalkRequest, newRequest, applyToWalk,
             logout, applications, selectedRequestId, loadApplications,
             acceptWalker, denyWalker,
-            showRatingForm, ratingTarget, newRating, openRatingForm, submitRating, completeWalk
+            showRatingForm, ratingTarget, newRating, openRatingForm, submitRating, completeWalk, userDogs, loadUserDogs,
         };
     },
     template: `
