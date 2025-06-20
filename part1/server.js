@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
-const users = require('../routes/users');
+const users = require('./routes/users');
 const dogs = require('./routes/dogs');
 const requests = require('./routes/requests');
 const ratings = require('./routes/ratings');
